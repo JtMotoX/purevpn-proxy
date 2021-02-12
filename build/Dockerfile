@@ -57,7 +57,7 @@ RUN apt-get update && \
 COPY ./danted.conf /etc/danted.conf
 
 # Copy scripts to image
-ADD ./scripts /scripts
+COPY ./scripts /scripts
 RUN chown -R root:root /scripts
 RUN chmod 755 /scripts/*.sh
 
