@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+    purevpn:
+        build: ./build
+        image: jtmotox/purevpn-proxy:latest
+        container_name: purevpn-proxy
+        env_file: my.env
+        hostname: purevpn-proxy
+        privileged: true
+        restart: always
+        ports:
+            - "1080:1080" # socks5 proxy
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./build/scripts:/scripts
+            - ./build/danted.conf:/etc/danted.conf
