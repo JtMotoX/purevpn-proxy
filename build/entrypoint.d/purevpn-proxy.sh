@@ -82,6 +82,4 @@ fi
 echo "Starting proxy service . . ."
 sudo /usr/sbin/service danted restart
 
-tail -n+1 -f \
-	/var/log/purevpn.log \
-	/var/log/sockd.log
+logTailArr+=("/var/log/purevpn.log" "/var/log/sockd.log")

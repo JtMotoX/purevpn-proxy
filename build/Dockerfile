@@ -61,6 +61,11 @@ COPY ./scripts /scripts
 RUN chown -R root:root /scripts
 RUN chmod 755 /scripts/*.sh
 
+# Copy entrypoint.d scripts to image
+COPY ./entrypoint.d/* /entrypoint.d/
+RUN chown -R root:root /entrypoint.d
+RUN chmod 755 /entrypoint.d/*.sh
+
 # this is required to perform the purevpn login
 RUN echo 'export USER="$(whoami)"' >>/etc/profile
 
