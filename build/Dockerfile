@@ -41,7 +41,7 @@ RUN useradd -m -u $CONTAINER_USERID -p password $CONTAINER_USER
 RUN echo "$CONTAINER_USER ALL=NOPASSWD: /usr/sbin/service purevpn restart" >>/etc/sudoers
 RUN echo "$CONTAINER_USER ALL=NOPASSWD: /scripts/killswitch_enable.sh" >>/etc/sudoers
 RUN echo "$CONTAINER_USER ALL=NOPASSWD: /scripts/killswitch_disable.sh" >>/etc/sudoers
-RUN echo "$CONTAINER_USER ALL=NOPASSWD: /scripts/reset_resolv.sh" >>/etc/sudoers
+RUN echo "$CONTAINER_USER ALL=NOPASSWD:SETENV: /scripts/reset_resolv.sh" >>/etc/sudoers
 RUN echo "$CONTAINER_USER ALL=NOPASSWD: /usr/sbin/service danted restart" >>/etc/sudoers
 
 # Disable IPV6
@@ -68,8 +68,6 @@ RUN chmod 755 /entrypoint.d/*.sh
 
 # this is required to perform the purevpn login
 RUN echo 'export USER="$(whoami)"' >>/etc/profile
-
-RUN echo "$CONTAINER_USER ALL=NOPASSWD:SETENV: /scripts/reset_resolv.sh" >>/etc/sudoers
 
 USER $CONTAINER_USER
 WORKDIR /home/$CONTAINER_USER
