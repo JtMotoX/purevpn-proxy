@@ -49,13 +49,45 @@ RUN apt-get update && \
 	touch /var/log/sockd.log && \
 	chown $CONTAINER_USER:$CONTAINER_USER /var/log/sockd.log
 
+# Install 3proxy proxy server
+ENV proxy_dir=/usr/local/3proxy
+RUN apt-get update && \
+	apt-get install -y \
+		git \
+		psmisc \
+		build-essential \
+		&& \
+	mkdir -p /tmp/3proxy && \
+	cd /tmp/3proxy && \
+	git clone https://github.com/z3apa3a/3proxy . && \
+	ln -s Makefile.Linux Makefile && \
+	make && \
+	make install && \
+	rm -rf /tmp/3proxy && \
+	apt-get remove -y \
+		git \
+		build-essential \
+		&& \
+	apt-get autoremove -y && \
+	rm -rf /var/lib/apt/lists/* && \
+	usermod -a -G proxy $CONTAINER_USER
+
 # Allow user to perform tasks as sudo
 RUN echo "$CONTAINER_USER ALL=NOPASSWD:SETENV: /scripts/*.sh" >>/etc/sudoers
+
+# Enable IPV4 FORWARDING
+RUN echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
 
 # Add dante configs
 COPY ./configs/danted.conf /etc/danted.conf
 RUN chmod 777 /etc/danted.conf
 RUN ls -l /etc/danted.conf
+
+# Add 3proxy configs
+COPY ./configs/3proxy.cfg ${proxy_dir}/conf/3proxy.cfg
+RUN echo ${proxy_dir} && \
+	chown --reference ${proxy_dir} ${proxy_dir}/conf/3proxy.cfg && \
+	chmod 660 ${proxy_dir}/conf/3proxy.cfg
 
 # Copy scripts to image
 COPY ./scripts /scripts

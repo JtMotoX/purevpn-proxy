@@ -32,9 +32,19 @@ else
 	echo "Killswitch is NOT enabled"
 fi
 
+# PROXY
+if [[ "${proxy_service}" == "3proxy" ]]; then
+	echo "Starting 3proxy proxy service . . ."
+	sudo --preserve-env /scripts/start_3proxy.sh
+	logTailArr+=("${proxy_dir}/logs/*.log")
+elif [[ "${proxy_service}" == "dante" ]]; then
 	echo "Starting dante proxy service . . ."
 	sudo --preserve-env /scripts/start_dante.sh
 	logTailArr+=("/var/log/sockd.log")
+else
+	echo "Not starting proxy service since none was defined"
+fi
+
 echo "Container is up and running"
 
 tail -n+1 -f ${logTailArr[@]}
