@@ -72,6 +72,19 @@ RUN apt-get update && \
 	rm -rf /var/lib/apt/lists/* && \
 	usermod -a -G proxy $CONTAINER_USER
 
+# Install headless transmission
+ENV TRANSMISSION_LOGFILE=/var/log/transmission.log
+RUN apt-get update && \
+	apt-get install -y transmission-daemon && \
+	rm -rf /var/lib/apt/lists/* && \
+	sed -i 's|\(^CONFIG_DIR=.*\)"|\1 --log-debug --logfile '$TRANSMISSION_LOGFILE'"|' /etc/default/transmission-daemon && \
+	touch $TRANSMISSION_LOGFILE && \
+	chown $CONTAINER_USER:$CONTAINER_USER $TRANSMISSION_LOGFILE && \
+	chmod 777 $TRANSMISSION_LOGFILE
+
+# Install envsubst
+RUN apt-get update && apt-get install -y gettext-base && rm -rf /var/lib/apt/lists/*
+
 # Allow user to perform tasks as sudo
 RUN echo "$CONTAINER_USER ALL=NOPASSWD:SETENV: /scripts/*.sh" >>/etc/sudoers
 
@@ -88,6 +101,9 @@ COPY ./configs/3proxy.cfg ${proxy_dir}/conf/3proxy.cfg
 RUN echo ${proxy_dir} && \
 	chown --reference ${proxy_dir} ${proxy_dir}/conf/3proxy.cfg && \
 	chmod 660 ${proxy_dir}/conf/3proxy.cfg
+
+# Copy transmission settings and allow non-root user to inject variables and apply settings
+COPY ./configs/transmission-settings.json /tmp/transmission-settings.json
 
 # Copy scripts to image
 COPY ./scripts /scripts

@@ -45,6 +45,11 @@ else
 	echo "Not starting proxy service since none was defined"
 fi
 
+# TRANSMISSION
+echo "Starting transmission . . ."
+sudo --preserve-env /scripts/start_transmission.sh
+logTailArr+=("/var/log/transmission.log")
+
 echo "Container is up and running"
 
 tail -n+1 -f ${logTailArr[@]}
