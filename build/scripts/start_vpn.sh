@@ -1,23 +1,6 @@
 #!/bin/bash
-#
-# Connect to random vpn endpoint
-#
-# Required environment variables:
-#  - purevpn_username
-#  - purevpn_password
 
 set -e
-
-# FUNCTION TO CHECK IF ARGUMENT IS TRUE
-bool() {
-	string=$1
-	if [[ "${string,,}" == "true" || "$string" == "1" ]]; then
-		return 0
-	fi
-	return 1
-}
-
-. /etc/profile
 
 # verify PureVPN installed
 if ! which purevpn > /dev/null; then
@@ -26,13 +9,12 @@ if ! which purevpn > /dev/null; then
 fi
 
 purevpn --version
-danted -v
 
 ORIG_IP=$(curl -s --connect-timeout 5 --max-time 10 'ifconfig.me')
 echo "Current IP: ${ORIG_IP}"
 
 # start purevpn service
-sudo /usr/sbin/service purevpn restart
+/usr/sbin/service purevpn restart
 
 purevpn --logout >/dev/null
 
@@ -68,18 +50,14 @@ purevpn --connect "${LOCATION}"
 # fix resolve
 echo "Fixing /etc/resolv.conf . . ."
 sleep 5
-sudo --preserve-env /scripts/reset_resolv.sh
+/scripts/reset_resolv.sh
 
 NEW_IP=$(curl -s 'icanhazip.com')
 echo "Original IP: ${ORIG_IP}"
 echo "New IP (${LOCATION}): ${NEW_IP}"
 echo
 
-if bool $killswitch; then
-	echo 'y' | sudo /scripts/killswitch_enable.sh
+if [[ "${NEW_IP}" == "${ORIG_IP}" ]]; then
+	echo "IP did not change so connection must not have been successful"
+	exit 1
 fi
-
-echo "Starting proxy service . . ."
-sudo /usr/sbin/service danted restart
-
-logTailArr+=("/var/log/purevpn.log" "/var/log/sockd.log")

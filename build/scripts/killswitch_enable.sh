@@ -8,10 +8,7 @@ sudo ufw default deny incoming
 sudo ufw default deny outgoing
 sudo ufw allow out on tun0 from any to any
 
-SOCKS_PORT=$(grep '^internal:' /etc/danted.conf | sed -E 's/.*=\s*([0-9]*).*/\1/g')
-if [[ "$SOCKS_PORT" != "" ]]; then
-	echo "Allow port $SOCKS_PORT"
-	sudo ufw allow $SOCKS_PORT
-fi
+# ALLOW INCOMING SOCKS PROXY
+sudo ufw allow 1080
 
 sudo ufw enable
