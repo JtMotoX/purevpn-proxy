@@ -16,7 +16,7 @@ services:
         env_file: my.env
         hostname: purevpn-proxy
         privileged: true
-        restart: always
+        restart: "no"
         ports:
             - "1080:1080" # socks5 proxy
             - "9091:9091" # transmission
