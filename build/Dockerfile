@@ -117,5 +117,4 @@ USER $CONTAINER_USER
 WORKDIR /home/$CONTAINER_USER
 RUN echo ". /etc/profile" >>~/.bashrc
 
-ENTRYPOINT ["/scripts/entrypoint.sh"]
-CMD ["/bin/bash"]
+CMD ["/scripts/entrypoint.sh"]
