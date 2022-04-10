@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 while true; do
 	# CHECK TRANSMISSION DOWNLOADS CONNECTIVITY
@@ -6,7 +6,7 @@ while true; do
 
 	# CHECK VPN CONNECTIVITY
 	purevpn --status | grep 'Connected' >/dev/null 2>&1
-	if [[ $? -ne 0 ]]; then
+	if [ $? -ne 0 ]; then
 		echo "Looks like VPN connectivity was lost"
 		echo "Exiting . . ."
 		exit 1
