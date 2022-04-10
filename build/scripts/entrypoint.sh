@@ -15,6 +15,12 @@ bool() {
 
 . /etc/profile
 
+# CHECK TRANSMISSION DOWNLOADS CONNECTIVITY
+if ! /scripts/check_downloads_connection.sh; then exit 1; fi
+
+# CHECK INTERNET CONNECTIVITY
+if ! /scripts/check_internet_connection.sh; then exit 1; fi
+
 # VPN
 echo "Starting vpn service . . ."
 sudo --preserve-env /scripts/start_vpn.sh
