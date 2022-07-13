@@ -32,7 +32,21 @@ if [ "$1" = "run" ]; then
 
 	# VPN
 	echo "Starting vpn service . . ."
-	sudo --preserve-env /scripts/start_vpn.sh
+	if [ -n "$purevpn_location" ]; then
+		purevpn_successful=false
+		purevpn_location_array=($(echo ${purevpn_location} | tr "," "\n"))
+		for i in "${purevpn_location_array[@]}"; do
+			if purevpn_location="${i}" sudo --preserve-env /scripts/start_vpn.sh; then
+				purevpn_successful=true
+				break
+			fi
+		done
+		if [ "${purevpn_successful}" != "true" ]; then
+			exit 1
+		fi
+	else
+		sudo --preserve-env /scripts/start_vpn.sh
+	fi
 	logTailArr+=("/var/log/purevpn.log")
 
 	# KILLSWITCH
