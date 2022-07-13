@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "# MANAGED BY reset_resolv.sh" > /etc/resolv.conf
+echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
 # ALLOW/FIX DOCKER PORT ACCESS TO THIS CONTAINER ON eth0
 SOURCENET=$allow_subnet
