@@ -13,8 +13,16 @@ purevpn --version
 ORIG_IP=$(curl -s --connect-timeout 5 --max-time 10 'ifconfig.me')
 echo "Current IP: ${ORIG_IP}"
 
+# stop purevpn service
+pkill -f -9 purevpnd || true
+
+# fix resolve
+echo "Fixing /etc/resolv.conf . . ."
+sleep 5
+/scripts/reset_resolv.sh
+
 # start purevpn service
-/usr/sbin/service purevpn restart
+/usr/sbin/service purevpn start
 
 purevpn --logout >/dev/null
 

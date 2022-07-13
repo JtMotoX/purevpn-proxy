@@ -8,5 +8,5 @@ INTERFACE=eth0
 if [[ "$SOURCENET" != "" ]]; then
 	GATEWAY=$(ip route | grep default | grep $INTERFACE | awk '{print $3}')
 	echo "Allowing $SOURCENET to access this container on $INTERFACE"
-	ip route add $SOURCENET via $GATEWAY dev $INTERFACE
+	ip route replace $SOURCENET via $GATEWAY dev $INTERFACE
 fi
