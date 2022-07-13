@@ -43,6 +43,11 @@ else
 	LOCATIONS=$(purevpn --location)
 	echo -e "$LOCATIONS"
 	LOCATION_CODES=$(echo -e $LOCATIONS | grep -o -E '[A-Z]{2}')
+	if [ -n "$purevpn_location_exclude" ]; then
+		for location_exclude in ${purevpn_location_exclude//,/ }; do
+			LOCATION_CODES=$(echo "${LOCATION_CODES}" | grep -v "${location_exclude}")
+		done
+	fi
 	ARRAY=(${LOCATION_CODES//:/ })
 	LEN=${#ARRAY[@]}
 
