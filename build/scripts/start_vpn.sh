@@ -2,6 +2,9 @@
 
 set -e
 
+# CLEANUP TMP FILES FROM PREVIOUS CONNECTIONS
+rm -rf /tmp/_MEI* >/dev/null 2>&1 || true
+
 # verify PureVPN installed
 if ! which purevpn > /dev/null; then
     echo "ERROR: purevpn package is missing"

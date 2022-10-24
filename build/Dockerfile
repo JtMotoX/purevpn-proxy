@@ -29,7 +29,8 @@ ENV PUREVPN_VERSION=1.2.5
 # Download and install PureVPN
 RUN wget -O purevpn_amd64.deb "https://s3.amazonaws.com/purevpn-dialer-assets/linux/app/purevpn_${PUREVPN_VERSION}_amd64.deb" --progress=dot:mega -q && \
 	dpkg -i purevpn_amd64.deb && \
-	rm -f purevpn_amd64.deb
+	rm -f purevpn_amd64.deb && \
+	rm -rf /tmp/_MEI* >/dev/null 2>&1 || true
 
 # Determine the username and uid to run container
 ENV CONTAINER_USERNAME=purevpn
