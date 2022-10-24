@@ -104,7 +104,7 @@ RUN echo ${proxy_dir} && \
 	chmod 660 ${proxy_dir}/conf/3proxy.cfg
 
 # Copy transmission settings and allow non-root user to inject variables and apply settings
-COPY ./configs/transmission-settings.json /tmp/transmission-settings.json
+COPY ./configs/transmission-settings.json /etc/transmission-daemon/settings.template.json
 
 # Copy scripts to image
 COPY ./scripts /scripts
